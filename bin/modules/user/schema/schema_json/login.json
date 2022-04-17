@@ -1,0 +1,28 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "email": { "type": "string", "format": "email" },
+      "password": { "type": "string", "minLength": 8 }
+    },
+    "required": ["email", "password"]
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "object",
+          "properties": {
+            "id": { "type": "string", "format": "uuid" },
+            "email": { "type": "string", "format": "email" },
+            "phoneNumber": { "type": "string" },
+            "accessToken": { "type": "string" },
+            "refreshToken": { "type": "string" }
+          } ,
+          "required": ["id", "accessToken"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

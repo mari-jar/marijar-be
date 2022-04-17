@@ -1,0 +1,30 @@
+{
+  "params": {
+    "type": "object",
+    "properties": {
+      "id": {"type": "string"}
+    },
+    "required": ["id"]
+  },
+  "query": {
+    "type": "object",
+    "properties": {
+      "coba": { "type": "array" }
+    },
+    "required": ["coba"]
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { 
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" }
+          } 
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}
