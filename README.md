@@ -1,4 +1,4 @@
-# Boxity-server
+# Marijar BE
 
 This Project is used to Learning Managemen Sistem (LMS) - Backend API. Used for all modul on Marijar
 
