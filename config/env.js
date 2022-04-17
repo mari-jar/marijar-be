@@ -16,7 +16,8 @@ const schema = {
   ],
   properties: {
     // Commons
-    PORT: { type: 'number', default: 9000 },
+    APP_PORT: { type: 'number', default: 9000 },
+    APP_HOST: { type: 'string', default: '0.0.0.0' },
     APP_NAME: { type: 'string' },
 
     // Authentication
