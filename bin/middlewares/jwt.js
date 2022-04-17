@@ -43,7 +43,7 @@ const generateToken = async (fastify, audience) => {
 
 const verifyToken = async (request, _) => {
   const authorization = request.headers.authorization
-  if(validate.isEmpty(authorization) && !authorization.includes('Bearer')) {
+  if(validate.isEmpty(authorization) || !authorization.includes('Bearer')) {
     throw httpError.BadRequest('Bearer token not found')
   }
   
