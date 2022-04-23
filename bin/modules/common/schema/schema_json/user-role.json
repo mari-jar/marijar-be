@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "disguise": { "type": "string" }
+  },
+  "required": [
+    "name",
+    "disguise"
+  ],
+  "additionalProperties": false
+}

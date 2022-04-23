@@ -12,12 +12,25 @@ module.exports = {
     for(const key in payload) {
       if (validate.isEmpty(operator[key])) {
         result += `(${operatorDefault(payload)})`
-        continue;
+        break;
       }
       result = operator[key](payload[key])
     }
     return result
   },
+
+  update: (payload) => {
+    let i = 0
+    let result = ''
+    for (const key in payload) {
+      result += `${key} = '${payload[key]}'`
+      if (Object.keys(payload).length - 1 > i) {
+        result += `, `
+      }
+      i++
+    }
+    return result
+  }
     
 }
 

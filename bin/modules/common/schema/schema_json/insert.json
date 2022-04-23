@@ -1,0 +1,25 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "type": {"type": "string"},
+      "data": {"type": "object"}
+    },
+    "required": ["type", "data"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { 
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" }
+          } 
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

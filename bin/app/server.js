@@ -1,8 +1,10 @@
 
-const userHandler = require('../modules/user/handler/handler')
+const UserHandler = require('../modules/user/handler/handler')
+const CommonHandler = require('../modules/common/handler/handler')
 
 const serverHandler = async (fastify, _, done) => {
-  await new userHandler(fastify).server(fastify); 
+  await new UserHandler(fastify).server(fastify); 
+  await new CommonHandler(fastify).server(fastify)
   done();
 }
 

@@ -7,12 +7,12 @@
     "name": { "type": "string" },
     "email": { "type": "string" },
     "username": { "type": "string" },
-    "phone_number": { "type": "integer" },
+    "phoneNumber": { "type": "integer" },
     "password": { "type": "string" },
-    "created_at": { "type": "string" },
-    "created_by": { "type": "string" },
-    "updated_at": { "type": "string" },
-    "updated_by": { "type": "string" }
+    "createdAt": { "type": "string" },
+    "createdBy": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
   },
   "required": [
     "id",
@@ -21,12 +21,12 @@
     "name",
     "email",
     "username",
-    "phone_number",
+    "phoneNumber",
     "password",
-    "created_at",
-    "created_by",
-    "updated_at",
-    "updated_by"
+    "createdAt",
+    "createdBy",
+    "updatedAt",
+    "updatedBy"
   ],
   "additionalProperties": false
 }

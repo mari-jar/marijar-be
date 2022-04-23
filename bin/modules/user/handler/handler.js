@@ -1,5 +1,4 @@
 
-const { verifyToken } = require("../../../middlewares/jwt");
 const schema = require("../schema/schema");
 const Usecase = require("../usecase/usecase");
 

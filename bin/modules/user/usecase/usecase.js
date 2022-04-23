@@ -18,12 +18,12 @@ module.exports = class {
     const where = { email: payload.email }
     const user = await this.user.findOne([], where)
     if (validate.isEmpty(user)) {
-      throw httpError.UnprocessableEntity(`Your email or password is wrong`)
+      throw httpError.BadRequest(`Surel atau kata sandi anda salah`)
     }
 
     const isValid = await bcrypt.compareSync(payload.password, user.password)
     if (!isValid) {
-      throw httpError.UnprocessableEntity(`Your email or password is wrong`)
+      throw httpError.BadRequest(`Surel atau kata sandi anda salah`)
     }
     
     const token = await jwt.generateToken(this.fastify, user.id)
@@ -49,13 +49,13 @@ module.exports = class {
     const user = await this.user.findOne([], where)
     if (!validate.isEmpty(user)) {
       if (user.email === payload.email) {
-        throw httpError.BadRequest('Email has been used')
+        throw httpError.Conflict('Surel telah digunakan')
       }
       if (user.username === payload.username) {
-        throw httpError.BadRequest('Username has been used')
+        throw httpError.Conflict('Username telah digunakan')
       }
       if (user.phoneNumber == payload.phoneNumber) {
-        throw httpError.BadRequest('Phone number has been used')
+        throw httpError.Conflict('Nomor telepon telah digunakan')
       }
     }
 
