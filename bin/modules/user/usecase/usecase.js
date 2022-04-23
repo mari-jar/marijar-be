@@ -1,14 +1,18 @@
 const { send } = require("../../../helpers/utils/wrapper");
-const User = require("../../../repositories/user/pg");
 const { v4: uuid } = require('uuid');
 const httpError = require("http-errors");
 const validate = require("validate.js");
 const bcrypt = require('bcryptjs');
 const jwt = require("../../../middlewares/jwt");
 
+const Service = require("./service");
+const User = require("../../../repositories/user/pg");
+
 module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
+
+    this.Service = new Service(fastify)
     this.user = new User(fastify)
   }
 
@@ -30,9 +34,8 @@ module.exports = class {
 
     result = {
       id: user.id,
-      email: user.email,
-      phoneNumber: `0${user.phoneNumber}`,
-      accessToken: token
+      accessToken: token,
+      refreshToken: ''
     }
 
     return send(result)
@@ -59,14 +62,16 @@ module.exports = class {
       }
     }
 
+    const role = await this.Service.getUserRole()
+    const status = await this.Service.getUserStatus()
     const userId = uuid();
     const now = new Date(Date.now()).toISOString()
     const salt = bcrypt.genSaltSync(12);
     const body = {
       ...payload,
       id: userId,
-      status: '',
-      role: '',
+      status: status.notVerified,
+      role: role.school,
       createdAt: now,
       createdBy: userId,
       updatedAt: now,
@@ -78,9 +83,15 @@ module.exports = class {
     return send(result)
   }
 
-  async getUser(payload) {
-    const coba = await this.user.findMany()
-    
-    return send(payload)
+  async getDetail(payload) {
+    let result
+    const { id } = payload
+    result = await this.user.findOne([], { id })
+    if (validate.isEmpty(result)) {
+      throw httpError.NotFound('Pengguna tidak ditemukan')
+    }
+    result.phoneNumber = `0${result.phoneNumber}`
+
+    return send(result)
   }
  }

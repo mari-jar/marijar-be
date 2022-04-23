@@ -10,7 +10,7 @@ module.exports = class {
   async server(fastify) {
     await fastify.post('/user/login', { schema: schema.login, onRequest: fastify.basicAuth }, this.login);
     await fastify.post('/user', { schema: schema.register, onRequest: fastify.basicAuth }, this.register);
-    await fastify.get('/user/:id', {  onRequest: fastify.bearerToken }, this.getUser);
+    await fastify.get('/user/:id', { schema: schema.getDetail, onRequest: fastify.bearerToken }, this.getDetail);
   }
   
   login = async (request, reply) => {
@@ -27,9 +27,9 @@ module.exports = class {
     reply.send(response)
   }
   
-  getUser = async (request, reply) => {
+  getDetail = async (request, reply) => {
     const { params:payload } = request
-    const response = await this.usecase.getUser(payload)
+    const response = await this.usecase.getDetail(payload)
 
     reply.send(response)
   }

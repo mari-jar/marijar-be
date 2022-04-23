@@ -16,7 +16,8 @@ module.exports = class {
     let result
 
     const model = {
-      [COMMON_TYPE.USER_ROLE]: schema.userRole
+      [COMMON_TYPE.USER_ROLE]: schema.userRole,
+      [COMMON_TYPE.USER_STATUS]: schema.userStatus
     }
     await validateData(model[payload.type], payload.data)
     const dataStr = JSON.stringify(payload.data)

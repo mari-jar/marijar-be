@@ -69,8 +69,7 @@ module.exports = class {
   /**
    * To insert data
    * 
-   * @param {Object} where 
-   * @returns {Object} id
+   * @param {Object} where
    */
    async delete (where) {
     let result 
@@ -107,7 +106,6 @@ module.exports = class {
       await convert.convertObject('snakeCase', where)
 
       const query = `${this.query.find(select, where)} LIMIT 1`
-      console.log(query)
       const { rows } = await this.db.query(query)
       result = rows.shift()
       
@@ -130,7 +128,7 @@ module.exports = class {
    * 
    * @param {Array} select 
    * @param {Object} where 
-   * @returns {Object} Any
+   * @returns {Array} Any
    */
    async findMany (select, where) {
     let result 
@@ -140,7 +138,6 @@ module.exports = class {
       await convert.convertObject('snakeCase', where)
 
       const query = `${this.query.find(select, where)}`
-      console.log(query)
       const { rows } = await this.db.query(query)
       result = rows
       
