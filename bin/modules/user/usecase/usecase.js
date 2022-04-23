@@ -12,7 +12,7 @@ module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
 
-    this.Service = new Service(fastify)
+    this.service = new Service(fastify)
     this.user = new User(fastify)
   }
 
@@ -31,11 +31,39 @@ module.exports = class {
     }
     
     const token = await jwt.generateToken(this.fastify, user.id)
+    const refreshToken = await this.service.generateRefreshToken(user.id, uuid())
 
     result = {
       id: user.id,
       accessToken: token,
-      refreshToken: ''
+      refreshToken: refreshToken
+    }
+
+    return send(result)
+  }
+
+  async refreshToken(payload) {
+    let result
+    const key = `refresh-token-${payload.refreshToken}`
+    const redis = await this.fastify.redis.get(key)
+    if (validate.isEmpty(redis)) {
+      throw httpError.BadRequest(`refresh token tidak daoat digunakan`)
+    }
+    await this.fastify.redis.del(key)
+
+    const data = JSON.parse(redis)
+    const user = await this.user.findOne([], { id: data.aud })
+    if (validate.isEmpty(user)) {
+      throw httpError.BadRequest(`Pengguna tidak ditemukan`)
+    }
+
+    const token = await jwt.generateToken(this.fastify, user.id)
+    const refreshToken = await this.service.generateRefreshToken(user.id, uuid())
+
+    result = {
+      id: user.id,
+      accessToken: token,
+      refreshToken: refreshToken  
     }
 
     return send(result)
@@ -62,8 +90,8 @@ module.exports = class {
       }
     }
 
-    const role = await this.Service.getUserRole()
-    const status = await this.Service.getUserStatus()
+    const role = await this.service.getUserRole()
+    const status = await this.service.getUserStatus()
     const userId = uuid();
     const now = new Date(Date.now()).toISOString()
     const salt = bcrypt.genSaltSync(12);
