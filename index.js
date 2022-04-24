@@ -12,7 +12,7 @@ db.init(fastify);
 middleware.init(fastify)
 server.init(fastify);
 
-fastify.listen(config.env.PORT, config.env.HOST, (err) => {
+fastify.listen(config.env.PORT, (err) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
