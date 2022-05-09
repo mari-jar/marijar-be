@@ -90,8 +90,9 @@ module.exports = class {
       }
     }
 
-    const role = await this.service.getUserRole()
-    const status = await this.service.getUserStatus()
+    const role = JSON.parse(await this.fastify.redis.get('userRole'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+
     const userId = uuid();
     const now = new Date(Date.now()).toISOString()
     const salt = bcrypt.genSaltSync(12);

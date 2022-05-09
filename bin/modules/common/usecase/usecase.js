@@ -4,7 +4,6 @@ const validateData = require('../../../helpers/utils/validate');
 const schema = require("../schema/schema");
 const validate = require("validate.js");
 const httpError = require("http-errors");
-const { COMMON_TYPE } = require("../../../helpers/commons");
 const Common = require("../../../repositories/common/pg");
 
 module.exports = class {
@@ -14,14 +13,7 @@ module.exports = class {
 
   async insert(payload) {
     let result
-
-    const model = {
-      [COMMON_TYPE.USER_ROLE]: schema.userRole,
-      [COMMON_TYPE.USER_STATUS]: schema.userStatus
-    }
-    await validateData(model[payload.type], payload.data)
     const dataStr = JSON.stringify(payload.data)
-
     const insertData = {
       ...payload,
       id: uuid(),

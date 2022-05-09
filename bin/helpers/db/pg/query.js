@@ -24,7 +24,11 @@ module.exports = class {
 
   find(select, where) {
     select = validate.isEmpty(select) ? `*` : select.join(`, `)
-    return  `SELECT ${select} FROM ${this.table} WHERE ${service.where(where)}`
+    let result = `SELECT ${select} FROM ${this.table}`
+    if (!validate.isEmpty(where)) {
+      result += ` WHERE ${service.where(where)}`
+    }
+    return  result
   }
 }
 

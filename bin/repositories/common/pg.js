@@ -120,9 +120,6 @@ module.exports = class {
     return result
   }
 
-  // ================================
-  // #Commands
-  // ================================
   /**
    * To find one
    * 
@@ -146,6 +143,37 @@ module.exports = class {
         await convert.convertObject('camelCase', result)
       }
     } catch (error) {
+      throw httpError.InternalServerError(error);
+    }
+
+    return result
+  }
+
+  /**
+   * To find many with group specific column
+   * 
+   * @param {Array} select 
+   * @param {Object} where 
+   * @param {String} group
+   * @returns {Array} Any
+   */
+  async findManyGroup (select, where, group) {
+    let result 
+
+    try {
+      await convert.convertArray('snakeCase', select)
+      await convert.convertObject('snakeCase', where)
+
+      const query = `${this.query.find(select, where)} GROUP BY ${group}`
+      const { rows } = await this.db.query(query)
+      result = rows
+      
+      if (!validate.isEmpty(result)) {
+        await validateData(model.findManyRes, result)
+        await convert.convertObject('camelCase', result)
+      }
+    } catch (error) {
+      console.log(error)
       throw httpError.InternalServerError(error);
     }
 
