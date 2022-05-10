@@ -19,8 +19,10 @@ const init = (fastify) => {
       expiresIn: '1h'
     },
     verify: { allowedIss: config.env.APP_NAME },
-    formatUser: (user) => {
-      return user;
+    formatUser: async user => {
+      const key = `user-data-${user.sub}`
+      const redis = await fastify.redis.get(key)
+      return JSON.parse(redis);
     }
   })
   fastify.decorate('bearerToken', verifyToken)

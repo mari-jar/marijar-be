@@ -4,15 +4,14 @@ const httpError = require("http-errors");
 const validate = require("validate.js");
 const bcrypt = require('bcryptjs');
 const jwt = require("../../../middlewares/jwt");
+const service = require("./service");
 
-const Service = require("./service");
 const User = require("../../../repositories/user/pg");
 
 module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
 
-    this.service = new Service(fastify)
     this.user = new User(fastify)
   }
 
@@ -29,9 +28,10 @@ module.exports = class {
     if (!isValid) {
       throw httpError.BadRequest(`Surel atau kata sandi anda salah`)
     }
-    
-    const token = await jwt.generateToken(this.fastify, user.id)
-    const refreshToken = await this.service.generateRefreshToken(user.id, uuid())
+
+    const userData = await service.generateUserData(this.fastify, user, uuid());
+    const token = await jwt.generateToken(this.fastify, userData)
+    const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
     result = {
       id: user.id,
@@ -49,7 +49,6 @@ module.exports = class {
     if (validate.isEmpty(redis)) {
       throw httpError.BadRequest(`refresh token tidak daoat digunakan`)
     }
-    await this.fastify.redis.del(key)
 
     const data = JSON.parse(redis)
     const user = await this.user.findOne([], { id: data.aud })
@@ -57,8 +56,9 @@ module.exports = class {
       throw httpError.BadRequest(`Pengguna tidak ditemukan`)
     }
 
-    const token = await jwt.generateToken(this.fastify, user.id)
-    const refreshToken = await this.service.generateRefreshToken(user.id, uuid())
+    const userData = await service.generateUserData(this.fastify, user, uuid());
+    const token = await jwt.generateToken(this.fastify, userData)
+    const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
     result = {
       id: user.id,
@@ -122,5 +122,9 @@ module.exports = class {
     result.phoneNumber = `0${result.phoneNumber}`
 
     return send(result)
+  }
+
+  async getProfile(_, opts) {
+    return send(opts)
   }
  }

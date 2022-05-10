@@ -12,6 +12,7 @@ module.exports = class {
     await fastify.post('/user/refresh-token', { schema: schema.refreshToken, onRequest: fastify.basicAuth }, this.refreshToken);
     await fastify.post('/user', { schema: schema.register, onRequest: fastify.basicAuth }, this.register);
     await fastify.get('/user/:id', { schema: schema.getDetail, onRequest: fastify.bearerToken }, this.getDetail);
+    await fastify.get('/user/profile', { schema: schema.getProfile, onRequest: fastify.bearerToken }, this.getProfile);
   }
   
   login = async (request, reply) => {
@@ -38,6 +39,13 @@ module.exports = class {
   getDetail = async (request, reply) => {
     const { params:payload } = request
     const response = await this.usecase.getDetail(payload)
+
+    reply.send(response)
+  }
+
+  getProfile = async (request, reply) => {
+    const opts = await request.user
+    const response = await this.usecase.getProfile({}, opts)
 
     reply.send(response)
   }
