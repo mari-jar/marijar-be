@@ -47,7 +47,7 @@ module.exports = class {
       type: type,
       data: dataStr
     }
-    await this.common.update(insertData, { id, type })
+    await this.common.update({ id, type }, insertData)
     result = { id }
     return send(result)
   }

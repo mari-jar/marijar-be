@@ -14,7 +14,7 @@ module.exports = class {
     return  `INSERT INTO ${this.table}(${key}) VALUES(${value}) RETURNING id`
   }
 
-  update(payload, where) {
+  update(where, payload) {
     return  `UPDATE ${this.table} SET ${service.update(payload)} WHERE ${service.where(where)}`
   }
 

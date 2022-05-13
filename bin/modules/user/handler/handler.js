@@ -11,8 +11,11 @@ module.exports = class {
     await fastify.post('/user/login', { schema: schema.login, onRequest: fastify.basicAuth }, this.login);
     await fastify.post('/user/refresh-token', { schema: schema.refreshToken, onRequest: fastify.basicAuth }, this.refreshToken);
     await fastify.post('/user', { schema: schema.register, onRequest: fastify.basicAuth }, this.register);
-    await fastify.get('/user/:id', { schema: schema.getDetail, onRequest: fastify.bearerToken }, this.getDetail);
+    await fastify.post('/user/verify/send', { schema: schema.sendVerify, onRequest: fastify.basicAuth }, this.sendVerify);
+    await fastify.post('/user/verify', { schema: schema.verify, onRequest: fastify.basicAuth }, this.verify);
+    await fastify.post('/user/logout', { schema: schema.logout, onRequest: fastify.bearerToken }, this.logout);
     await fastify.get('/user/profile', { schema: schema.getProfile, onRequest: fastify.bearerToken }, this.getProfile);
+    await fastify.get('/user/:id', { schema: schema.getDetail, onRequest: fastify.bearerToken }, this.getDetail);
   }
   
   login = async (request, reply) => {
@@ -32,6 +35,27 @@ module.exports = class {
   register = async (request, reply) => {
     const { body:payload } = request
     const response = await this.usecase.register(payload)
+  
+    reply.send(response)
+  }
+
+  sendVerify = async (request, reply) => {
+    const { body:payload } = request
+    const response = await this.usecase.sendVerify(payload)
+    
+    reply.send(response)
+  }
+  
+  verify = async (request, reply) => {
+    const { body:payload } = request
+    const response = await this.usecase.verify(payload)
+  
+    reply.send(response)
+  }
+
+  logout = async (request, reply) => {
+    const { body:payload } = request
+    const response = await this.usecase.logout(payload)
   
     reply.send(response)
   }

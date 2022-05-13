@@ -44,9 +44,33 @@ module.exports = class {
     return result
   }
 
+  /**
+   * To insert data
+   * 
+   * @param {Object} payload 
+   * @param {Object} where
+   */
+   async update (where, payload) {
+    let result 
+    try {
+      await validateData(model.updateReq, payload)
+      await convert.convertObject('snakeCase', payload)
+      await convert.convertObject('snakeCase', where)
+
+      const query = this.query.update(where, payload)
+      const { rows } = await this.db.query(query)
+      result = rows.shift()
+      
+    } catch (error) {
+      throw httpError.InternalServerError(error);
+    }
+
+    return result
+  }
+
 
   // ================================
-  // #Commands
+  // #Queries
   // ================================
   /**
    * To find one

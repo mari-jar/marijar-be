@@ -7,12 +7,12 @@
     "name": { "type": "string" },
     "email": { "type": "string" },
     "username": { "type": "string" },
-    "phone_number": { "type": "string" },
+    "phoneNumber": { "type": "integer" },
     "password": { "type": "string" },
-    "created_at": { "type": "object" },
-    "created_by": { "type": "string" },
-    "updated_at": { "type": "object" },
-    "updated_by": { "type": "string" }
+    "createdAt": { "type": "string" },
+    "createdBy": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
   },
   "required": [
   ],

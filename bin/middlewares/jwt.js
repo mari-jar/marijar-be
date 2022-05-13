@@ -22,6 +22,9 @@ const init = (fastify) => {
     formatUser: async user => {
       const key = `user-data-${user.sub}`
       const redis = await fastify.redis.get(key)
+      if (validate.isEmpty(redis)) {
+        throw httpError.Unauthorized(`Please log-in to continue`)
+      }
       return JSON.parse(redis);
     }
   })

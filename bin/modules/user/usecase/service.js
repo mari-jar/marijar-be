@@ -1,10 +1,9 @@
 
 module.exports = {
-  async generateRefreshToken(fastify, subject, id) {
+  async generateRefreshToken(fastify, userId, id) {
     const key = `refresh-token-${id}`
-    const data = JSON.stringify({sub: subject})
+    const data = JSON.stringify({ userId })
     const expiredIn = 1000 * 60 * 60 * 24 * 30;
-    await fastify.redis.del(key)
     await fastify.redis.set(key, data, `EX`, expiredIn)
     return id
   },

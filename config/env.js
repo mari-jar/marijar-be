@@ -16,7 +16,9 @@ const schema = {
     'REDIS_HOST',
     'REDIS_PORT',
     'REDIS_PASSWORD',
-    'REDIS_FAMILY'
+    'REDIS_FAMILY',
+    'EMAIL',
+    'EMAIL_PASSWORD'
   ],
   properties: {
     // Commons
@@ -40,7 +42,11 @@ const schema = {
     REDIS_HOST: { type: 'string' },
     REDIS_PORT: { type: 'number' },
     REDIS_PASSWORD: { type: 'string' },
-    REDIS_FAMILY: { type: 'string' }
+    REDIS_FAMILY: { type: 'string' },
+
+    // Email
+    EMAIL: { type: 'string' },
+    EMAIL_PASSWORD: { type: 'string' }
   }
 }
 

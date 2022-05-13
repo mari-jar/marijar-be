@@ -1,0 +1,19 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "verifyId": { "type": "string", "format": "uuid" }
+    },
+    "required": ["verifyId"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "string" }
+      },
+      "required": ["data"]
+    }
+  }
+}
