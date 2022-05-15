@@ -35,7 +35,7 @@ module.exports = class {
     const { params:payload } = request
     const response = await this.usecase.delete(payload)
     
-    reply.send(response)
+    reply.send(response) 
   }
 
   list = async (request, reply) => {
