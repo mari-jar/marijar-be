@@ -6,7 +6,7 @@ const convert = require('../../helpers/utils/convert');
 const validateData = require('../../helpers/utils/validate');
 const model = require('./model/model');
 
-const table = "commons";
+const table = "schools";
 
 module.exports = class {
 
@@ -121,27 +121,21 @@ module.exports = class {
   }
 
   /**
-   * To find one
+   * To count data
    * 
-   * @param {Array} select 
    * @param {Object} where 
-   * @returns {Array} Any
+   * @returns {Object} Any
    */
-   async findMany (select, where) {
+   async count (where) {
     let result 
 
     try {
-      await convert.convertArray('snakeCase', select)
       await convert.convertObject('snakeCase', where)
 
-      const query = `${this.query.find(select, where)}`
+      const query = `${this.query.count(where)}`
       const { rows } = await this.db.query(query)
-      result = rows
-      
-      if (!validate.isEmpty(result)) {
-        await validateData(model.findManyRes, result)
-        await convert.convertObject('camelCase', result)
-      }
+      result = parseInt(rows.shift().count)
+
     } catch (error) {
       throw httpError.InternalServerError(error);
     }
@@ -150,21 +144,25 @@ module.exports = class {
   }
 
   /**
-   * To find many with group specific column
+   * To find with pagination
    * 
    * @param {Array} select 
    * @param {Object} where 
-   * @param {String} group
+   * @param {Array} sort 
+   * @param {Integer} limit 
+   * @param {Integer} offset 
    * @returns {Array} Any
    */
-  async findManyGroup (select, where, group) {
+   async pagination (select, where, sort, limit, offset) {
     let result 
 
     try {
       await convert.convertArray('snakeCase', select)
       await convert.convertObject('snakeCase', where)
-
-      const query = `${this.query.find(select, where)} GROUP BY ${group}`
+      await convert.convertArray('snakeCase', sort)
+      
+      sort = sort.join(' ');
+      const query = `${this.query.find(select, where)} ORDER BY ${sort} LIMIT ${limit} OFFSET ${offset}`
       const { rows } = await this.db.query(query)
       result = rows
       
@@ -178,4 +176,5 @@ module.exports = class {
 
     return result
   }
+
 }

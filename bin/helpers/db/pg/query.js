@@ -30,6 +30,14 @@ module.exports = class {
     }
     return  result
   }
+
+  count(where) {
+    let result = `SELECT COUNT(1) FROM ${this.table}`
+    if (!validate.isEmpty(where)) {
+      result += ` WHERE ${service.where(where)}`
+    }
+    return result
+  }
 }
 
 

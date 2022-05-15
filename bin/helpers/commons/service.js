@@ -9,6 +9,7 @@ const { camelCase } = require("change-case");
  * List Commons Type
  * @userRole
  * @userStatus
+ * @schoolSubscriptionStatus
  */
 module.exports = {
   init: async (fastify) => {
