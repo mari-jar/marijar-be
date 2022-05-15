@@ -12,7 +12,7 @@ fastify.register(qs, {})
 db.init(fastify);
 middleware.init(fastify);
 server.init(fastify);
-common.init(fastify);
+// common.init(fastify);
 
 fastify.listen(config.env.PORT, config.env.HOST, (err) => {
   if (err) {
