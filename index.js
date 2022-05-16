@@ -13,7 +13,7 @@ fastify.register(require("@fastify/cors"), {
   origin: "*",
   methods: ["POST", "PUT", "DELETE", "GET"],
   maxAge: 5,
-  allowedHeaders: ["Authorization"],
+  allowedHeaders: ["origin", "content-type", "accept", "Authorization"],
   exposedHeaders: ["Authorization"]
 });
 
