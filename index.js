@@ -9,6 +9,14 @@ const fastify = require('fastify')(config.fastify);
 
 fastify.register(qs, {})
 
+fastify.register(require("@fastify/cors"), {
+  origin: "*",
+  methods: ["POST", "PUT", "DELETE", "GET"],
+  maxAge: 5,
+  allowedHeaders: ["Authorization"],
+  exposedHeaders: ["Authorization"]
+});
+
 db.init(fastify);
 middleware.init(fastify);
 server.init(fastify);
