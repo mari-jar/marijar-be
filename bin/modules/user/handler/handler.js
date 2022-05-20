@@ -55,7 +55,8 @@ module.exports = class {
 
   logout = async (request, reply) => {
     const { body:payload } = request
-    const response = await this.usecase.logout(payload)
+    const opts = await request.user
+    const response = await this.usecase.logout(payload, opts)
   
     reply.send(response)
   }

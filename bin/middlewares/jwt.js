@@ -16,7 +16,7 @@ const init = (fastify) => {
     decode: { complete: false },
     sign: {
       aud: config.env.APP_NAME,
-      expiresIn: '1h'
+      expiresIn: '1d'
     },
     verify: { allowedIss: config.env.APP_NAME },
     formatUser: async user => {
@@ -38,9 +38,10 @@ const init = (fastify) => {
  * @param {String} subject userId
  * @returns {String} Token
  */
-const generateToken = async (fastify, subject) => {
+const generateToken = async (fastify, payload) => {
   const opts = Object.assign({
-    sub: subject
+    sub: payload.sub,
+    role: payload.role
   }, fastify.jwt.options.sign)
 
   return await fastify.jwt.sign(opts)

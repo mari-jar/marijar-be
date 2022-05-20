@@ -41,8 +41,8 @@ module.exports = class {
       throw httpError.Forbidden(`Akun anda tidak aktif`)
     }
 
-    const userData = await service.generateUserData(this.fastify, user, uuid());
-    const token = await jwt.generateToken(this.fastify, userData)
+    const userKey = await service.generateUserData(this.fastify, user, uuid());
+    const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
     const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
     result = {
@@ -69,8 +69,8 @@ module.exports = class {
       throw httpError.BadRequest(`Pengguna tidak ditemukan`)
     }
 
-    const userData = await service.generateUserData(this.fastify, user, uuid());
-    const token = await jwt.generateToken(this.fastify, userData)
+    const userKey = await service.generateUserData(this.fastify, user, uuid());
+    const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
     const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
     result = {
@@ -175,9 +175,9 @@ module.exports = class {
     return send('Akun anda berhasil diverifikasi, silahkan login')
   }
 
-  async logout(payload, _) {
-    const key = `refresh-token-${payload.refreshToken}`
-    await this.fastify.redis.del(key)
+  async logout(payload, opts) {
+    await this.fastify.redis.del(`refresh-token-${payload.refreshToken}`)
+    await this.fastify.redis.del(`user-data-${opts.sub}`)
 
     return send('Anda berhasil logout')
   }
