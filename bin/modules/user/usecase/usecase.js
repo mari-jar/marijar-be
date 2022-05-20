@@ -87,16 +87,12 @@ module.exports = class {
 
     const where = { $or:[
       { email: payload.email },
-      { username: payload.username }, 
       { phoneNumber: payload.phoneNumber }
     ] }
     const user = await this.user.findOne([], where)
     if (!validate.isEmpty(user)) {
       if (user.email === payload.email) {
         throw httpError.Conflict('Surel telah digunakan')
-      }
-      if (user.username === payload.username) {
-        throw httpError.Conflict('Username telah digunakan')
       }
       if (user.phoneNumber == payload.phoneNumber) {
         throw httpError.Conflict('Nomor telepon telah digunakan')

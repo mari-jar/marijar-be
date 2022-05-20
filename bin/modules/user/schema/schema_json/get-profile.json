@@ -9,7 +9,6 @@
             "id": { "type": "string", "format": "uuid" },
             "name": { "type": "string" },
             "email": { "type": "string" },
-            "username": { "type": "string" },
             "status": { "type": "string" },
             "role": { "type": "string" },
             "phoneNumber": { "type": "string" },

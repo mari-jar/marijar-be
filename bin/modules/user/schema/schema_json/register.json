@@ -4,11 +4,10 @@
     "properties": {
       "name": { "type": "string" },
       "email": { "type": "string", "format": "email" },
-      "username": { "type": "string" },
       "password": { "type": "string", "minLength": 8 },
       "phoneNumber": { "type": "integer", "minLength": 9, "maxLength": 14 }
     },
-    "required": ["name", "email", "username", "password", "phoneNumber"],
+    "required": ["name", "email", "password", "phoneNumber"],
     "additionalProperties": false
   },
   "response": {

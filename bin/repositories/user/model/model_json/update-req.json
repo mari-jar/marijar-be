@@ -6,7 +6,6 @@
     "role": { "type": "string" },
     "name": { "type": "string" },
     "email": { "type": "string" },
-    "username": { "type": "string" },
     "phoneNumber": { "type": "integer" },
     "password": { "type": "string" },
     "createdAt": { "type": "string" },
