@@ -9,7 +9,6 @@ module.exports = {
   },
 
   async generateUserData(fastify, user, id) {
-    delete user.password
     user.sub = id
     const key = `user-data-${id}`
     const data = JSON.stringify(user)

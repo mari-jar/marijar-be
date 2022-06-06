@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "userId": { "type": "string" },
+    "schoolId": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string" },
+    "phoneNumber": { "type": "integer" },
+    "address": { "type": "string" },
+    "zone": { "type": "string" },
+    "postalCode": { "type": "integer" },
+    "image": { "type": "string" },
+    "nik": { "type": "integer" },
+    "isTeacher": { "type": "boolean" },
+    "data": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "required": [
+    "id",
+    "userId",
+    "schoolId",
+    "name",
+    "email",
+    "phoneNumber",
+    "zone",
+    "image",
+    "nik",
+    "data",
+    "createdAt",
+    "updatedAt"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,78 @@
+{
+  "query": {
+    "type": "object",
+    "properties": {
+      "where": { "type": "object", "default": {} },
+      "sort": { 
+        "type": "array", 
+        "default": ["createdAt", "desc"] ,
+        "maxItems": 2,
+        "items": [{"type": "string"}, {"type": "string", "enum": ["desc", "asc"]}]
+      },
+      "page": { "type": "integer", "default": 1 },
+      "limit": { "type": "integer", "default": 10 }
+    }
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "array",
+          "items": { "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid" },
+              "email": { "type": "string" },
+              "address": { "type": "string" },
+              "zone": { "type": "object",
+                "properties": {
+                  "village": { "type": "string" },
+                  "district": { "type": "string" },
+                  "province": { "type": "string" },
+                  "villageId": { "type": "string" },
+                  "districtId": { "type": "string" },
+                  "provinceId": { "type": "string" },
+                  "subdistrict": { "type": "string" },
+                  "subdistrictId": { "type": "string" }
+                }
+              },
+              "website": { "type": "string" },
+              "image": { "type": "object",
+                "properties": {
+                  "logo": { "type": "string" }
+                }
+              },
+              "npsn": { "type": "integer" },
+              "subscription": { "type": "object",
+                "properties": {
+                  "end": { "type": "string" },
+                  "start": { "type": "string" },
+                  "status": { "type": "string" }
+                }
+              },
+              "name": { "type": "string" },
+              "data": { "type": "object" },
+              "userId": { "type": "string", "format": "uuid" },
+              "postalCode": { "type": "integer" },
+              "phoneNumber": { "type": "string" },
+              "createdAt": { "type": "string" },
+              "createdBy": { "type": "string", "format": "uuid" },
+              "updatedAt": { "type": "string" },
+              "updatedBy": { "type": "string", "format": "uuid" }
+            }
+          } },
+        "meta": { "type": "object",
+          "properties": {
+            "page": { "type": "integer" },
+            "quantity": { "type": "integer" },
+            "totalPage": { "type": "integer" },
+            "totalData": { "type": "integer" }
+          },
+          "required": ["page", "quantity", "totalPage", "totalData"],    
+          "additionalProperties": false
+        }
+      },
+      "required": ["data", "meta"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,22 +1,23 @@
 const { send } = require("../../../helpers/utils/wrapper");
 const { v4: uuid } = require('uuid');
-const { env } = require('../../../../config')
 const httpError = require("http-errors");
 const validate = require("validate.js");
 const bcrypt = require('bcryptjs');
 const jwt = require("../../../middlewares/jwt");
 const service = require("./service");
-const nodemailer = require("nodemailer");
-const mustache = require('mustache');
-const fs = require('fs');
+const mail = require("../../../helpers/mail");
 
 const User = require("../../../repositories/user/pg");
+const School = require("../../../repositories/school/pg");
+const Employee = require("../../../repositories/employee/pg");
 
 module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
 
     this.user = new User(fastify)
+    this.school = new School(fastify)
+    this.employee = new Employee(fastify)
   }
 
   async login(payload, _) {
@@ -32,23 +33,43 @@ module.exports = class {
     if (!isValid) {
       throw httpError.Unauthorized(`Surel atau kata sandi anda salah`)
     }
+    delete user.password
     
     const status = JSON.parse(await this.fastify.redis.get('userStatus'))
-    if (user.status === status.notVerified) {
-      throw httpError.UnprocessableEntity(`Akun anda belum diverifikasi`)
-    }
     if (user.status === status.notActive) {
       throw httpError.Forbidden(`Akun anda tidak aktif`)
     }
 
-    const userKey = await service.generateUserData(this.fastify, user, uuid());
-    const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
-    const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
-
     result = {
       id: user.id,
-      accessToken: token,
-      refreshToken: refreshToken
+    }
+    if (user.status != status.notVerified) {
+      const role = JSON.parse(await this.fastify.redis.get('userRole'))
+      const data = { ...user }
+      let filter = { userId: user.id }
+      let filterSchool = filter
+      if (user.role === role.employee) {
+        const employee = await this.employee.findOne([], filter );
+        if (!validate.isEmpty(employee)) {
+          data.employee = employee
+          filterSchool = { id: employee.schoolId }
+        }  
+      }
+
+      const school = await this.school.findOne([], filterSchool );
+      if (!validate.isEmpty(school)) {
+        data.school = school
+      }
+    
+      const userKey = await service.generateUserData(this.fastify, data, uuid());
+      const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
+      const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
+
+      result = {
+        ...result,
+        accessToken: token,
+        refreshToken: refreshToken
+      }
     }
 
     return send(result)
@@ -89,7 +110,7 @@ module.exports = class {
       { email: payload.email },
       { phoneNumber: payload.phoneNumber }
     ] }
-    const user = await this.user.findOne([], where)
+    const user = await this.user.findOne(['email', 'phoneNumber'], where)
     if (!validate.isEmpty(user)) {
       if (user.email === payload.email) {
         throw httpError.Conflict('Surel telah digunakan')
@@ -143,20 +164,10 @@ module.exports = class {
     await this.fastify.redis.set(`user-verify-${userData.id}`, 1, `EX`, minute * 1)
 
     // Send Email
-    const template = fs.readFileSync('./bin/helpers/mail_html/verify.html', 'utf8');
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: env.EMAIL,
-        pass: env.EMAIL_PASSWORD,
-      },
-    });
-    await transporter.sendMail({
-      from: 'Marijar',
-      to: userData.email,
-      subject: "[Marijar] Varifikasi Email",
-      html: mustache.render(template, { url: verifyId })
-    });
+    await mail.sendMail(
+      userData.email, 
+      '[Marijar] Varifikasi Email', 
+      { html: `verify.html`, data: { url: verifyId } })
 
     return send('Silahkan periksa email anda')
   }

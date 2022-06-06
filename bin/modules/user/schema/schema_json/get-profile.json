@@ -15,7 +15,43 @@
             "createdAt": { "type": "string" },
             "createdBy": { "type": "string" },
             "updatedAt": { "type": "string" },
-            "updatedBy": { "type": "string" }
+            "updatedBy": { "type": "string" },
+            "school": { 
+              "type": "object", 
+              "properties": {
+                "id": { "type": "string", "format": "uuid" },
+                "email": { "type": "string" },
+                "address": { "type": "string" },
+                "zone": { "type": "object",
+                  "properties": {
+                    "province": { "type": "string" },
+                    "provinceId": { "type": "string" },
+                    "district": { "type": "string" },
+                    "districtId": { "type": "string" },
+                    "subdistrict": { "type": "string" },
+                    "subdistrictId": { "type": "string" },
+                    "village": { "type": "string" },
+                    "villageId": { "type": "string" }
+                  }
+                 },
+                "image": { "type": "object",
+                  "properties": {
+                    "profile": { "type": "string" },
+                    "logo": { "type": "string" } 
+                  }
+                 },
+                "name": { "type": "string" },
+                "npsn": { "type": "integer" },
+                "subscription": { "type": "object",
+                  "properties": {
+                    "end": { "type": "string" },
+                    "start": { "type": "string" },
+                    "status": { "type": "string" } 
+                  }
+                 },
+                "postalCode": { "type": "integer" } 
+              } 
+            }
           } 
         }
       },

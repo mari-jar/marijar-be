@@ -17,7 +17,7 @@
             "accessToken": { "type": "string" },
             "refreshToken": { "type": "string" }
           } ,
-          "required": ["id", "accessToken", "refreshToken"]
+          "required": ["id"]
         }
       },
       "required": ["data"]

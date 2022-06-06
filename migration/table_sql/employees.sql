@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS employees (
     postal_code INTEGER NOT NULL,
     phone_number BIGINT NOT NULL,
     nik BIGINT NOT NULL,
-    position VARCHAR(255) NOT NULL,
+    is_teacher BOOLEAN NOT NULL,
     image JSONB NOT NULL,
     created_at TIMESTAMP without time zone NOT NULL,
     updated_at TIMESTAMP without time zone NOT NULL,
