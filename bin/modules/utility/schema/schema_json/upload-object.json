@@ -1,0 +1,23 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "image": { "type": "string" }
+    },
+    "required": ["image"]
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "object",
+          "properties": {
+            "image": { "type": "string" }
+          } ,
+          "required": ["image"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}
