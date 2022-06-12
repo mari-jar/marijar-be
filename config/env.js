@@ -13,10 +13,17 @@ const schema = {
     'POSTGRES_USER', 
     'POSTGRES_PASSWORD', 
     'POSTGRES_DATABASE',
+    'REDIS_HOST',
+    'REDIS_PORT',
+    'REDIS_PASSWORD',
+    'REDIS_FAMILY',
+    'EMAIL',
+    'EMAIL_PASSWORD'
   ],
   properties: {
     // Commons
     PORT: { type: 'number', default: 9000 },
+    HOST: { type: 'string', default: '0.0.0.0' },
     APP_NAME: { type: 'string' },
 
     // Authentication
@@ -30,7 +37,16 @@ const schema = {
     POSTGRES_PORT: { type: 'number' },
     POSTGRES_USER: { type: 'string' },
     POSTGRES_PASSWORD: { type: 'string' },
-    POSTGRES_DATABASE: { type: 'string' }
+    POSTGRES_DATABASE: { type: 'string' },
+
+    REDIS_HOST: { type: 'string' },
+    REDIS_PORT: { type: 'number' },
+    REDIS_PASSWORD: { type: 'string' },
+    REDIS_FAMILY: { type: 'string' },
+
+    // Email
+    EMAIL: { type: 'string' },
+    EMAIL_PASSWORD: { type: 'string' }
   }
 }
 

@@ -1,0 +1,25 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "refreshToken": { "type": "string", "format": "uuid" }
+    },
+    "required": ["refreshToken"]
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "object",
+          "properties": {
+            "id": { "type": "string", "format": "uuid" },
+            "accessToken": { "type": "string" },
+            "refreshToken": { "type": "string" }
+          } ,
+          "required": ["id", "accessToken", "refreshToken"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

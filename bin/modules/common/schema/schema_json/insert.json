@@ -1,17 +1,12 @@
 {
-  "params": {
+  "body": {
     "type": "object",
     "properties": {
-      "id": {"type": "string"}
+      "type": {"type": "string"},
+      "data": {"type": "object"}
     },
-    "required": ["id"]
-  },
-  "query": {
-    "type": "object",
-    "properties": {
-      "coba": { "type": "array" }
-    },
-    "required": ["coba"]
+    "required": ["type", "data"],
+    "additionalProperties": false
   },
   "response": {
     "200": {

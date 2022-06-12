@@ -15,12 +15,17 @@ const init = (fastify) => {
     },
     decode: { complete: false },
     sign: {
-      iss: config.env.APP_NAME,
-      expiresIn: '1h'
+      aud: config.env.APP_NAME,
+      expiresIn: '1d'
     },
     verify: { allowedIss: config.env.APP_NAME },
-    formatUser: (user) => {
-      return user;
+    formatUser: async user => {
+      const key = `user-data-${user.sub}`
+      const redis = await fastify.redis.get(key)
+      if (validate.isEmpty(redis)) {
+        throw httpError.Unauthorized(`Please log-in to continue`)
+      }
+      return JSON.parse(redis);
     }
   })
   fastify.decorate('bearerToken', verifyToken)
@@ -30,12 +35,13 @@ const init = (fastify) => {
  * To generate token
  * 
  * @param {Any} fastify package fastify
- * @param {String} audience userId
+ * @param {String} subject userId
  * @returns {String} Token
  */
-const generateToken = async (fastify, audience) => {
+const generateToken = async (fastify, payload) => {
   const opts = Object.assign({
-    aud: audience
+    sub: payload.sub,
+    role: payload.role
   }, fastify.jwt.options.sign)
 
   return await fastify.jwt.sign(opts)
@@ -43,7 +49,7 @@ const generateToken = async (fastify, audience) => {
 
 const verifyToken = async (request, _) => {
   const authorization = request.headers.authorization
-  if(validate.isEmpty(authorization) && !authorization.includes('Bearer')) {
+  if(validate.isEmpty(authorization) || !authorization.includes('Bearer')) {
     throw httpError.BadRequest('Bearer token not found')
   }
   

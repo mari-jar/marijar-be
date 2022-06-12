@@ -1,0 +1,61 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "address": { "type": "string" },
+      "zone": { "type": "object", 
+        "properties": {
+          "province": { "type": "string" },
+          "provinceId": { "type": "string" },
+          "district": { "type": "string" },
+          "districtId": { "type": "string" },
+          "subdistrict": { "type": "string" },
+          "subdistrictId": { "type": "string" },
+          "village": { "type": "string" },
+          "villageId": { "type": "string" }
+        }, 
+        "required": [
+          "province",
+          "provinceId",
+          "district",
+          "districtId",
+          "subdistrict",
+          "subdistrictId",
+          "village",
+          "villageId"] 
+      },
+      "postalCode": { "type": "integer", "minLength": 5 },
+      "website": { "type": "string" },
+      "image": { "type": "object", 
+        "properties": {
+          "profile": { "type": "string" },
+          "logo": { "type": "string" } 
+        },
+        "required": ["logo"] 
+      },
+      "npsn": { "type": "integer", "minLength": 8 }
+    },
+    "required": [
+      "address", 
+      "zone", 
+      "postalCode", 
+      "website", 
+      "image", 
+      "npsn"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "object", 
+          "properties": {
+            "id": { "type": "string", "format": "uuid" }
+          },
+          "required": ["id"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

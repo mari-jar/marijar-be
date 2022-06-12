@@ -1,0 +1,32 @@
+{
+  "params": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string", "format": "uuid" }
+    },
+    "required": ["id"]
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { 
+          "type": "object",
+          "properties": {
+            "id": { "type": "string", "format": "uuid" },
+            "name": { "type": "string" },
+            "email": { "type": "string" },
+            "status": { "type": "string" },
+            "role": { "type": "string" },
+            "phoneNumber": { "type": "string" },
+            "createdAt": { "type": "string" },
+            "createdBy": { "type": "string" },
+            "updatedAt": { "type": "string" },
+            "updatedBy": { "type": "string" }
+          } 
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

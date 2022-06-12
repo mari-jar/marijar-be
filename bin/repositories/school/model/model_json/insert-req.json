@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "userId": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string" },
+    "phoneNumber": { "type": "string" },
+    "address": { "type": "string" },
+    "zone": { "type": "string" },
+    "postalCode": { "type": "integer" },
+    "image": { "type": "string" },
+    "website": { "type": "string" },
+    "npsn": { "type": "integer" },
+    "subscription": { "type": "string" },
+    "data": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "createdBy": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
+  },
+  "required": [
+    "id",
+    "userId",
+    "name",
+    "email",
+    "phoneNumber",
+    "zone",
+    "image",
+    "website",
+    "npsn",
+    "subscription",
+    "data",
+    "createdAt",
+    "createdBy",
+    "updatedAt",
+    "updatedBy"
+  ],
+  "additionalProperties": false
+}

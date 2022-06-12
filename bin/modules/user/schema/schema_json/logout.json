@@ -1,0 +1,19 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "refreshToken": { "type": "string", "format": "uuid" }
+    },
+    "required": ["refreshToken"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "string" }
+      },
+      "required": ["data"]
+    }
+  }
+}

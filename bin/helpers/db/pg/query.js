@@ -14,9 +14,29 @@ module.exports = class {
     return  `INSERT INTO ${this.table}(${key}) VALUES(${value}) RETURNING id`
   }
 
+  update(where, payload) {
+    return  `UPDATE ${this.table} SET ${service.update(payload)} WHERE ${service.where(where)}`
+  }
+
+  delete(where) {
+    return `DELETE FROM ${this.table} WHERE ${service.where(where)}`
+  }
+
   find(select, where) {
     select = validate.isEmpty(select) ? `*` : select.join(`, `)
-    return  `SELECT ${select} FROM ${this.table} WHERE ${service.where(where)}`
+    let result = `SELECT ${select} FROM ${this.table}`
+    if (!validate.isEmpty(where)) {
+      result += ` WHERE ${service.where(where)}`
+    }
+    return  result
+  }
+
+  count(where) {
+    let result = `SELECT COUNT(1) FROM ${this.table}`
+    if (!validate.isEmpty(where)) {
+      result += ` WHERE ${service.where(where)}`
+    }
+    return result
   }
 }
 

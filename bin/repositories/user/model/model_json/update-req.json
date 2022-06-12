@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "status": { "type": "string" },
+    "role": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string" },
+    "phoneNumber": { "type": "integer" },
+    "password": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "createdBy": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
+  },
+  "required": [
+  ],
+  "additionalProperties": false
+}

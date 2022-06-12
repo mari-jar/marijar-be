@@ -1,0 +1,63 @@
+{
+  "body": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "email": { "type": "string", "format": "email" },
+      "address": { "type": "string" },
+      "zone": { "type": "object", 
+        "properties": {
+          "province": { "type": "string" },
+          "provinceId": { "type": "string" },
+          "district": { "type": "string" },
+          "districtId": { "type": "string" },
+          "subdistrict": { "type": "string" },
+          "subdistrictId": { "type": "string" },
+          "village": { "type": "string" },
+          "villageId": { "type": "string" }
+        }, 
+        "required": [
+          "province",
+          "provinceId",
+          "district",
+          "districtId",
+          "subdistrict",
+          "subdistrictId",
+          "village",
+          "villageId"] 
+      },
+      "postalCode": { "type": "integer", "minLength": 5 },
+      "phoneNumber": { "type": "integer", "minLength": 10 },
+      "nik": { "type": "integer", "minLength": 16, "maxLength": 16 },
+      "image": { "type": "object", 
+        "properties": {
+          "profile": { "type": "string" }
+        }
+      },
+      "isTeacher": { "type": "boolean" }
+    },
+    "required": [
+      "name",
+      "email",
+      "address", 
+      "zone", 
+      "postalCode", 
+      "phoneNumber",
+      "nik"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { "type": "object", 
+          "properties": {
+            "id": { "type": "string", "format": "uuid" }
+          },
+          "required": ["id"]
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

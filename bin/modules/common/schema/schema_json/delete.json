@@ -1,0 +1,24 @@
+{
+  "params": {
+    "type": "object",
+    "properties": {
+      "id": {"type": "string", "format": "uuid"}
+    },
+    "required": ["id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { 
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" }
+          } 
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}
