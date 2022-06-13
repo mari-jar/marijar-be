@@ -32,7 +32,7 @@ const schema = {
     PRIVATE_KEY_PATH: { type: 'string' },
     PUBLIC_KEY_PATH: { type: 'string' },
 
-    // Database
+    // Database & Cloud Services
     POSTGRES_HOST: { type: 'string' },
     POSTGRES_PORT: { type: 'number' },
     POSTGRES_USER: { type: 'string' },
@@ -43,6 +43,11 @@ const schema = {
     REDIS_PORT: { type: 'number' },
     REDIS_PASSWORD: { type: 'string' },
     REDIS_FAMILY: { type: 'string' },
+
+    AWS_BUCKET_NAME: { type: 'string' },
+    AWS_BUCKET_REGION: { type: 'string' },
+    AWS_ACCESS_KEY: { type: 'string' },
+    AWS_SECRET_KEY: { type: 'string' },
 
     // Email
     EMAIL: { type: 'string' },
