@@ -1,7 +1,6 @@
 const excel = require('xlsx');
 
 const httpError = require('http-errors');
-const { ERROR: httpError } = require('../http-error/custom_error');
 
 module.exports = class {
   async convertToJSON(payload) {
