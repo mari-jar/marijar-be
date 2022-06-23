@@ -15,7 +15,7 @@ module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
 
-    // Usecases
+    // Repositories
     this.employee = new Employee(fastify)
     this.user = new User(fastify)
 
