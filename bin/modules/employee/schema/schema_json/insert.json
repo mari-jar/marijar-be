@@ -46,6 +46,12 @@
       "nik"],
     "additionalProperties": false
   },
+  "file": {
+    "type": "object",
+    "properties": {
+      "excel": { "type": "file" }
+    }
+  },
   "response": {
     "200": {
       "type": "object",

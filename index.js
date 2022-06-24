@@ -9,6 +9,8 @@ const fastify = require('fastify')(config.fastify);
 
 fastify.register(qs, {})
 
+fastify.register(require('@fastify/multipart'));
+
 fastify.register(require("@fastify/cors"), {
   origin: "*",
   methods: ["POST", "PUT", "DELETE", "GET"],
