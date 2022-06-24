@@ -1,4 +1,3 @@
-
 const schema = require("../schema/schema");
 const Usecase = require("../usecase/usecase");
 
@@ -12,9 +11,8 @@ module.exports = class {
   }
 
   uploadImage = async (request, reply) => {
-    const { body: payload } = request
-    const response = await this.usecase.uploadImage(payload)
-
-    reply.send(response)
+    reply.send(
+      await this.usecase.uploadImage(await request.file())
+    )
   }
 }

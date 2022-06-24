@@ -13,8 +13,9 @@ module.exports = class {
     await fastify.delete('/employee/:id', { schema: schema.delete, onRequest: fastify.bearerToken }, this.delete);
     await fastify.get('/employee', { schema: schema.list, onRequest: fastify.bearerToken }, this.list);
     await fastify.get('/employee/:id', { schema: schema.detail, onRequest: fastify.bearerToken }, this.detail);
+    await fastify.post('/employee/many', { schema: schema.upload, onRequest: fastify.bearerToken }, this.uploadEmployee);
   }
-  
+
   insert = async (request, reply) => {
     const { body:payload } = request
     const opts = await request.user
@@ -52,4 +53,12 @@ module.exports = class {
     reply.send(response)
   }
 
+  uploadEmployee = async (request, reply) => {
+    const opts = await request.user
+    const files = await request.file()
+
+    const response = await this.usecase.uploadEmployee(files, opts)
+    
+    reply.send(response)
+  }
 }

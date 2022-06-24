@@ -1,25 +1,23 @@
-const fileTypes = [
+const imageFileType = [
   'image/png',
   'image/jpg',
-  'image/jpeg',
-  'application/pdf'
+  'image/jpeg'
 ];
 
 /**
- * Helper function to validate base64 image format
+ * Helper function to validate image extension
  * 
- * @param {string} base64String 
+ * @param {string} payload 
  * @returns Response object
  */
-const validateImageBase64 = (base64String) => {
-  const mimeType = base64String.substring('data:'.length, base64String.indexOf(';base64'));
-  if (fileTypes.indexOf(mimeType) === -1) {
-    return ({ err: true, extension: '' });
+const validateImageExtension = (payload) => {
+  if (imageFileType.includes(payload.mimetype)) {
+    return ({ err: false, extension: payload.mimetype.slice(6) });
   }
 
-  return ({ err: false, extension: mimeType.slice(6) });
+  return ({ err: true, extension: '' });
 };
 
 module.exports = {
-  validateImageBase64
+  validateImageExtension
 };

@@ -9,5 +9,6 @@
   update: require('./schema_json/update.json'),
   delete: require('./schema_json/delete.json'),
   list: require('./schema_json/list.json'),
-  detail: require('./schema_json/detail.json')
+  detail: require('./schema_json/detail.json'),
+  uploadEmployee: require('./schema_json/upload-employee.json')
 }

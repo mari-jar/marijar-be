@@ -1,19 +1,27 @@
-const { send } = require("../../../helpers/utils/wrapper");
-const { v4: uuid } = require('uuid');
-const httpError = require("http-errors");
-const validate = require("validate.js");
 const bcrypt = require('bcryptjs');
-const mail = require("../../../helpers/mail");
+const { v4: uuid } = require('uuid');
+const validate = require("validate.js");
+const httpError = require("http-errors");
 
-const Employee = require("../../../repositories/employee/pg");
 const User = require("../../../repositories/user/pg");
+const Employee = require("../../../repositories/employee/pg");
+
+const mail = require("../../../helpers/mail");
+const S3 = require('../../../helpers/db/aws/s3/index');
+const { send } = require("../../../helpers/utils/wrapper");
+const Excel = require('../../../helpers/utils/excel/index');
 
 module.exports = class {
   constructor (fastify) {
     this.fastify = fastify
 
+    // Repositories
     this.employee = new Employee(fastify)
     this.user = new User(fastify)
+
+    // Helpers
+    this.s3 = new S3()
+    this.excel = new Excel()
   }
 
   async insert(payload, opts) {
@@ -162,6 +170,88 @@ module.exports = class {
     result = await this.employee.findOne([], { id });
 
     return send(result)
+  }
+
+  async uploadEmployee(payload, opts) {
+    let result = {}
+
+    const role = JSON.parse(await this.fastify.redis.get('userRole'))
+    if (![role.employee, role.school].includes(opts.role)) {
+      throw httpError.Forbidden(`Your account does not have access`)
+    }
+
+    const userDatas = await this.excel.convertToJSON(payload)
+    if (userDatas.err) {
+      throw userDatas.msg
+    }
+
+    // let user
+    // if (payload.isTeacher) {
+    //   user = await this.user.findOne(['email', 'phoneNumber'], { $or: [
+    //     { email: payload.email },
+    //     { phoneNumber: payload.phoneNumber }
+    //   ] })  
+    // }
+    // const employeeData = await this.employee.findOne(['nik', 'email', 'phoneNumber'], { $or: [
+    //   { nik: payload.nik },
+    //   { email: payload.email },
+    //   { phoneNumber: payload.phoneNumber }
+    // ] })
+    // const temp = user || employeeData 
+    // if (!validate.isEmpty(temp)) {
+    //   if (temp.nik == payload.nik) {
+    //     throw httpError.Conflict('NIK has been used')
+    //   }
+    //   if (temp.email === payload.email) {
+    //     throw httpError.Conflict('Email has been used')
+    //   }
+    //   if (temp.phoneNumber == payload.phoneNumber) {
+    //     throw httpError.Conflict('Phone number has been used')
+    //   }
+    // }
+
+    // const userId = uuid();
+    // const now = new Date(Date.now()).toISOString()
+    // if (payload.isTeacher) {
+    //   const salt = bcrypt.genSaltSync(12);
+    //   const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    //   const password = `marijar${new Date(now).getMilliseconds()}`
+    //   const dataUser = {
+    //     id: userId,
+    //     status: status.notVerified,
+    //     role: role.employee,
+    //     name: payload.name,
+    //     email: payload.email,
+    //     phoneNumber: payload.phoneNumber,
+    //     password: bcrypt.hashSync(password, salt),
+    //     createdAt: now,
+    //     createdBy: opts.id,
+    //     updatedAt: now,
+    //     updatedBy: opts.id
+    //   }
+    //   user = await this.user.insert(dataUser)
+
+    //   // Send Email
+    //   await mail.sendMail(
+    //     payload.email,
+    //     '[Marijar] Pembuatan Akun', 
+    //     { html: `createAcount.html`, data: { email: payload.email, password } })
+    // }
+
+    // const insertData = {
+    //   ...payload,
+    //   id: uuid(),
+    //   userId: userId,
+    //   schoolId: opts.school.id,
+    //   zone: JSON.stringify(payload.zone),
+    //   image: JSON.stringify(payload.image),
+    //   data: JSON.stringify({}),
+    //   createdAt: now,
+    //   updatedAt: now
+    // }
+    // result = await this.employee.insert(insertData)
+
+    return send(userDatas)
   }
  }
  

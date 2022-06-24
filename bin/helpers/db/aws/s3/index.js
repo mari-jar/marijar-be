@@ -16,10 +16,9 @@ const s3 = new S3Instance(config);
 
 module.exports = class {
   async uploadObjectStream(payload) {
-    console.log(payload)
     const params = {
       Bucket: config.bucket,
-      Body: payload.image,
+      Body: payload.image.file,
       Key: `${uuid()}.${payload.ext}`
     };
 
