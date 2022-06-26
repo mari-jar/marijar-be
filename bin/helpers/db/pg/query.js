@@ -8,10 +8,21 @@ module.exports = class {
   }
  
   insert(payload) {
-    const key = Object.keys(payload).join(', ')
-    const value = Object.values(payload).map(elm => `'${elm}'`).join(', ')
+    let key = ``, value = ``;
+    if (validate.isArray(payload)) {
+      payload.forEach((payloadElm, idx) => {
+        key = Object.keys(payloadElm).join(', ')
+        value += `(${Object.values(payloadElm).map(elm => `'${elm}'`).join(', ')})`
+        if (idx != payload.length - 1) {
+          value += `, `
+        }
+      })
+    } else {
+      key = Object.keys(payload).join(', ')
+      value = `(${Object.values(payload).map(elm => `'${elm}'`).join(', ')})`
+    }
   
-    return  `INSERT INTO ${this.table}(${key}) VALUES(${value}) RETURNING id`
+    return  `INSERT INTO ${this.table}(${key}) VALUES ${value} RETURNING id`
   }
 
   update(where, payload) {

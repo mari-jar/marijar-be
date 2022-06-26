@@ -36,6 +36,29 @@ module.exports = class {
       result = rows.shift()
       
     } catch (error) {
+      throw httpError.InternalServerError(error);
+    }
+
+    return result
+  }
+
+  /**
+   * To insert data
+   * 
+   * @param {Array} payload 
+   * @returns {Array} id
+   */
+  async insertMany (payload) {
+    let result 
+    try {
+      await validateData(model.insertManyReq, payload)
+      await convert.convertObject('snakeCase', payload)
+
+      const query = this.query.insert(payload)
+      const { rows } = await this.db.query(query)
+      result = rows.map(elm => elm.id)
+      
+    } catch (error) {
       console.log(error)
       throw httpError.InternalServerError(error);
     }
