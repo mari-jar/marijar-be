@@ -19,7 +19,7 @@ module.exports = {
 
     await Mail.sendMail({
       from: 'Marijar',
-      to: `mochamadaufa7@gmail.com` ||email,
+      to: email,
       subject: subject,
       html: mustache.render(html, data)
     })

@@ -145,7 +145,7 @@ module.exports = class {
   async sendVerify(payload, _) {
     const userVerify = JSON.parse(await this.fastify.redis.get(`user-verify-${payload.id}`))
     if (userVerify) {
-      throw httpError.UnprocessableEntity('Silahkan tunggu kurang lebih 1 menit, untuk mengirim email lagi')
+      throw httpError.UnprocessableEntity('Silahkan tunggu kurang lebih 5 menit, untuk mengirim email lagi')
     }
 
     const status = JSON.parse(await this.fastify.redis.get('userStatus'))
@@ -159,15 +159,15 @@ module.exports = class {
 
     const verifyId = uuid()
     const data = JSON.stringify({ userId: userData.id })
-    const minute = 1000 * 60;
+    const minute = 1 * 60;
     await this.fastify.redis.set(`varify-${verifyId}`, data, `EX`, minute * 10)
-    await this.fastify.redis.set(`user-verify-${userData.id}`, 1, `EX`, minute * 1)
+    await this.fastify.redis.set(`user-verify-${userData.id}`, 1, `EX`, minute * 5)
 
     // Send Email
     await mail.sendMail(
       userData.email, 
       '[Marijar] Varifikasi Email', 
-      { html: `verify.html`, data: { url: verifyId } })
+      { html: `verify.html`, data: { url: `google.com/${verifyId}` } })
 
     return send('Silahkan periksa email anda')
   }
