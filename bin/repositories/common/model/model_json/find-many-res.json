@@ -3,9 +3,8 @@
   "items": {
     "type": "object",  
     "properties": {
-      "id": { "type": "string" },
-      "type": { "type": "string" },
-      "data": { "type": "object" }
+      "id": { },
+      "name": { "type": "string" }
     }
   }
 }

@@ -24,5 +24,14 @@ THEN
     FOR EACH ROW
     EXECUTE PROCEDURE update_timestamp();
 END IF;
+
+IF NOT EXISTS (select * FROM pg_trigger where tgname = 'created_and_updated_by_users') 
+THEN
+    CREATE TRIGGER created_and_updated_by_users
+    BEFORE INSERT
+    ON users
+    FOR EACH ROW
+    EXECUTE PROCEDURE created_and_updated_by();
+END IF;
 END
 $$;

@@ -38,6 +38,7 @@ module.exports = class {
       await validateData(model.insertRes, result)
       
     } catch (error) {
+      console.log(error)
       throw httpError.InternalServerError(error);
     }
 

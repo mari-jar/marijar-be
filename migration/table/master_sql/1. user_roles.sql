@@ -11,4 +11,5 @@ INSERT INTO user_roles (name, disguise) VALUES
 ('school', 'aJ4c3@cea9JQkYCX'),
 ('employee', '3kza1avN8xFSabsz'),
 ('student', 'sNt!dYNpjsDyPPBV'),
-('admin', 'HA9qmpqusKeEaT52');
+('admin', 'HA9qmpqusKeEaT52'),
+('admsin', 'HA9qsmpqusKeEaT52');

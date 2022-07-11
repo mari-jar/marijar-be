@@ -6,11 +6,9 @@ const convert = require('../../helpers/utils/convert');
 const validateData = require('../../helpers/utils/validate');
 const model = require('./model/model');
 
-const table = "commons";
-
 module.exports = class {
 
-  constructor (fastify) {
+  constructor (fastify, table) {
     this.query = new Query(table);
     this.fastify = fastify
     this.db = fastify.pg

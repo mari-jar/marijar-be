@@ -35,7 +35,7 @@ module.exports = class {
     }
     delete user.password
     
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     if (user.status === status.notActive) {
       throw httpError.Forbidden(`Akun anda tidak aktif`)
     }
@@ -44,7 +44,7 @@ module.exports = class {
       id: user.id,
     }
     if (user.status != status.notVerified) {
-      const role = JSON.parse(await this.fastify.redis.get('userRole'))
+      const role = JSON.parse(await this.fastify.redis.get('userRoles'))
       const data = { ...user }
       let filter = { userId: user.id }
       let filterSchool = filter
@@ -120,21 +120,14 @@ module.exports = class {
       }
     }
 
-    const role = JSON.parse(await this.fastify.redis.get('userRole'))
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const role = JSON.parse(await this.fastify.redis.get('userRoles'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
 
-    const userId = uuid();
-    const now = new Date(Date.now()).toISOString()
     const salt = bcrypt.genSaltSync(12);
     const body = {
       ...payload,
-      id: userId,
       status: status.notVerified,
       role: role.school,
-      createdAt: now,
-      createdBy: userId,
-      updatedAt: now,
-      updatedBy: userId,
       password: bcrypt.hashSync(payload.password, salt)
     }
     result = await this.user.insert(body)
@@ -148,7 +141,7 @@ module.exports = class {
       throw httpError.UnprocessableEntity('Silahkan tunggu kurang lebih 5 menit, untuk mengirim email lagi')
     }
 
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     const userData = await this.user.findOne(['id', 'status', 'email'], { id: payload.id })
     if (validate.isEmpty(userData)) {
       throw httpError.NotFound('Akun tidak ditemukan')
@@ -180,7 +173,7 @@ module.exports = class {
     }
     await this.fastify.redis.del(key)
 
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     await this.user.update({ id: user.userId }, { status: status.active })
 
     return send('Akun anda berhasil diverifikasi, silahkan login')
