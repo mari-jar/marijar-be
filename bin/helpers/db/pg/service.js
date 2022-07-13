@@ -35,6 +35,11 @@ module.exports = {
 }
 
 const operator = {
+  /**
+   * @To or condition
+   * @param {Array} param 
+   * @returns {String}
+   */
   '$or': (param) => {
     let result = ``
     param.forEach((elm, idx) => {
@@ -47,6 +52,15 @@ const operator = {
       result += temp  
     });
     return result
+  }, 
+  /**
+   * @To regex
+   * @param {Object} param 
+   * @returns {String}
+   */
+  '$regex': (param) => {
+    const key = Object.keys(param).shift()
+    return `${key} LIKE ${param[key]}`
   }
 }
 
@@ -54,7 +68,15 @@ const operatorDefault = (payload) => {
   let i = 0;
   let result = ''
   for (const key in payload) {
-    result += `${key} = '${payload[key]}'`
+    if (validate.isObject(payload[key])) {
+      for (const subKey in payload[key]) {
+        if (subKey === '$regex') {
+          result += `${key} LIKE '${payload[key][subKey]}'`
+        }
+      }
+    } else {
+      result += `${key} = '${payload[key]}'`
+    }
     if (Object.keys(payload).length - 1 > i) {
       result += ` AND `
     }

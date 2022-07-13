@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "properties": {
+    "zone": { "enum": ["province", "district", "subdistrict", "village"] },
+    "where": { "type": "object" }
+  },
+  "required": ["zone", "where"]
+}
