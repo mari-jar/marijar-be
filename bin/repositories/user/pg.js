@@ -46,7 +46,33 @@ module.exports = class {
   }
 
   /**
-   * To insert data
+     * To insert Many data
+     * 
+     * @param {Array} payload 
+     * @returns {Array} model.insertManyRes
+     */
+  async insertMany (payload) {
+    let result 
+    try {
+      await validateData(model.insertManyReq, payload)
+      await convert.convertObject('snakeCase', payload)
+
+      const query = `${this.query.insert(payload)}, email`
+      const { rows } = await this.db.query(query)
+      result = rows
+
+      await validateData(model.insertManyRes, result)
+      
+    } catch (error) {
+      error = error.detail || error
+      throw httpError.InternalServerError(error);
+    }
+
+    return result
+  }
+
+  /**
+   * To update data
    * 
    * @param {Object} payload 
    * @param {Object} where
@@ -102,7 +128,4 @@ module.exports = class {
     return result
   }
 
-  async findMany (select, filter) {
-    return 'haha';
-  }
 }

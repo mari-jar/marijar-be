@@ -1,7 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "id": { "type": "string" },
     "userId": { "type": "string" },
     "schoolId": { "type": "string" },
     "name": { "type": "string" },
@@ -12,13 +11,9 @@
     "postalCode": { "type": "integer" },
     "image": { "type": "string" },
     "nik": { "type": "integer" },
-    "isTeacher": { "type": "boolean" },
-    "data": { "type": "string" },
-    "createdAt": { "type": "string" },
-    "updatedAt": { "type": "string" }
+    "isTeacher": { "type": "boolean" }
   },
   "required": [
-    "id",
     "userId",
     "schoolId",
     "name",
@@ -26,10 +21,7 @@
     "phoneNumber",
     "zone",
     "image",
-    "nik",
-    "data",
-    "createdAt",
-    "updatedAt"
+    "nik"
   ],
   "additionalProperties": false
 }

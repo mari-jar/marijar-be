@@ -61,8 +61,9 @@ module.exports = class {
         data.school = school
       }
     
-      const userKey = await service.generateUserData(this.fastify, data, uuid());
+      const userKey = uuid()
       const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
+      await service.generateUserData(this.fastify, { ...data, accessToken: token, sub: userKey }, userKey);
       const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
       result = {
@@ -131,6 +132,30 @@ module.exports = class {
       password: bcrypt.hashSync(payload.password, salt)
     }
     result = await this.user.insert(body)
+
+    return send(result)
+  }
+
+  async insertMany(payload, opts) {
+    let result;
+
+    const role = JSON.parse(await this.fastify.redis.get('userRoles'))
+    if (![role.employee, role.school].includes(opts.role)) {
+      throw httpError.Forbidden(`Your account does not have access`)
+    }
+
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
+    const body = payload.map( elm => {
+      const salt = bcrypt.genSaltSync(12);
+      return {
+        ...elm,
+        status: status.notVerified,
+        password: bcrypt.hashSync(elm.password, salt),
+        createdBy: opts.id,
+        updatedBy: opts.id
+      }
+    })
+    result = await this.user.insertMany(body)
 
     return send(result)
   }

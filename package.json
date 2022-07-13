@@ -32,6 +32,7 @@
     "fastify-redis": "^4.3.3",
     "http-errors": "^2.0.0",
     "mustache": "^4.2.0",
+    "node-fetch": "^2.6.7",
     "nodemailer": "^6.7.5",
     "pg": "^8.7.3",
     "uuid": "^8.3.2",

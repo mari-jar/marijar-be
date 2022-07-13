@@ -9,7 +9,6 @@ module.exports = {
   },
 
   async generateUserData(fastify, user, id) {
-    user.sub = id
     const key = `user-data-${id}`
     const data = JSON.stringify(user)
     const expiredIn = 1 * 60 * 60 * 24 * 1;
