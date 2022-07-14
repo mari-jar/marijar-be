@@ -9,6 +9,10 @@
   "body": {
     "type": "object",
     "properties": {
+      "name": { "type": "string" },
+      "email": { "type": "string", "format": "email" },
+      "description": { "type": "string" },
+      "phoneNumber": { "type": "integer", "minLength": 9, "maxLength": 14 },
       "address": { "type": "string" },
       "zone": { "type": "object", 
         "properties": {
@@ -30,7 +34,13 @@
           "logo": { "type": "string" } 
         },
         "required": ["logo"] 
-      }
+      },
+      "schoolLevel": { "type": "string" },
+      "document": { "type": "object", 
+        "properties": {
+          "integrity": { "type": "string" }
+        }, 
+        "required": ["integrity"] }
     },
     "additionalProperties": false
   },

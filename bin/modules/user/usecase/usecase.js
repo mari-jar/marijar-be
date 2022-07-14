@@ -35,7 +35,7 @@ module.exports = class {
     }
     delete user.password
     
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     if (user.status === status.notActive) {
       throw httpError.Forbidden(`Akun anda tidak aktif`)
     }
@@ -44,7 +44,7 @@ module.exports = class {
       id: user.id,
     }
     if (user.status != status.notVerified) {
-      const role = JSON.parse(await this.fastify.redis.get('userRole'))
+      const role = JSON.parse(await this.fastify.redis.get('userRoles'))
       const data = { ...user }
       let filter = { userId: user.id }
       let filterSchool = filter
@@ -61,8 +61,9 @@ module.exports = class {
         data.school = school
       }
     
-      const userKey = await service.generateUserData(this.fastify, data, uuid());
+      const userKey = uuid()
       const token = await jwt.generateToken(this.fastify, { sub: userKey, role: user.role })
+      await service.generateUserData(this.fastify, { ...data, accessToken: token, sub: userKey }, userKey);
       const refreshToken = await service.generateRefreshToken(this.fastify, user.id, uuid())
 
       result = {
@@ -120,21 +121,14 @@ module.exports = class {
       }
     }
 
-    const role = JSON.parse(await this.fastify.redis.get('userRole'))
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const role = JSON.parse(await this.fastify.redis.get('userRoles'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
 
-    const userId = uuid();
-    const now = new Date(Date.now()).toISOString()
     const salt = bcrypt.genSaltSync(12);
     const body = {
       ...payload,
-      id: userId,
       status: status.notVerified,
       role: role.school,
-      createdAt: now,
-      createdBy: userId,
-      updatedAt: now,
-      updatedBy: userId,
       password: bcrypt.hashSync(payload.password, salt)
     }
     result = await this.user.insert(body)
@@ -142,13 +136,37 @@ module.exports = class {
     return send(result)
   }
 
+  async insertMany(payload, opts) {
+    let result;
+
+    const role = JSON.parse(await this.fastify.redis.get('userRoles'))
+    if (![role.employee, role.school].includes(opts.role)) {
+      throw httpError.Forbidden(`Your account does not have access`)
+    }
+
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
+    const body = payload.map( elm => {
+      const salt = bcrypt.genSaltSync(12);
+      return {
+        ...elm,
+        status: status.notVerified,
+        password: bcrypt.hashSync(elm.password, salt),
+        createdBy: opts.id,
+        updatedBy: opts.id
+      }
+    })
+    result = await this.user.insertMany(body)
+
+    return send(result)
+  }
+
   async sendVerify(payload, _) {
     const userVerify = JSON.parse(await this.fastify.redis.get(`user-verify-${payload.id}`))
     if (userVerify) {
-      throw httpError.UnprocessableEntity('Silahkan tunggu kurang lebih 1 menit, untuk mengirim email lagi')
+      throw httpError.UnprocessableEntity('Silahkan tunggu kurang lebih 5 menit, untuk mengirim email lagi')
     }
 
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     const userData = await this.user.findOne(['id', 'status', 'email'], { id: payload.id })
     if (validate.isEmpty(userData)) {
       throw httpError.NotFound('Akun tidak ditemukan')
@@ -159,15 +177,15 @@ module.exports = class {
 
     const verifyId = uuid()
     const data = JSON.stringify({ userId: userData.id })
-    const minute = 1000 * 60;
+    const minute = 1 * 60;
     await this.fastify.redis.set(`varify-${verifyId}`, data, `EX`, minute * 10)
-    await this.fastify.redis.set(`user-verify-${userData.id}`, 1, `EX`, minute * 1)
+    await this.fastify.redis.set(`user-verify-${userData.id}`, 1, `EX`, minute * 5)
 
     // Send Email
     await mail.sendMail(
       userData.email, 
       '[Marijar] Varifikasi Email', 
-      { html: `verify.html`, data: { url: verifyId } })
+      { html: `verify.html`, data: { url: `google.com/${verifyId}` } })
 
     return send('Silahkan periksa email anda')
   }
@@ -180,7 +198,7 @@ module.exports = class {
     }
     await this.fastify.redis.del(key)
 
-    const status = JSON.parse(await this.fastify.redis.get('userStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('userStatuses'))
     await this.user.update({ id: user.userId }, { status: status.active })
 
     return send('Akun anda berhasil diverifikasi, silahkan login')

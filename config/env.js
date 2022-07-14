@@ -4,6 +4,8 @@ const schema = {
   type: 'object',
   required: [
     'APP_NAME',
+    'BASE_URL',
+    'API_BASE_URL',
     'BASIC_AUTH_USERNAME', 
     'BASIC_AUTH_PASSWORD', 
     'PRIVATE_KEY_PATH',
@@ -25,6 +27,10 @@ const schema = {
     PORT: { type: 'number', default: 9000 },
     HOST: { type: 'string', default: '0.0.0.0' },
     APP_NAME: { type: 'string' },
+
+    // Url
+    BASE_URL: { type: 'string' },
+    API_BASE_URL: { type: 'string' },
 
     // Authentication
     BASIC_AUTH_USERNAME: { type: 'string' },

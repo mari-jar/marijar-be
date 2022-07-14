@@ -11,6 +11,7 @@ module.exports = class {
     await fastify.post('/user/login', { schema: schema.login, onRequest: fastify.basicAuth }, this.login);
     await fastify.post('/user/refresh-token', { schema: schema.refreshToken, onRequest: fastify.basicAuth }, this.refreshToken);
     await fastify.post('/user', { schema: schema.register, onRequest: fastify.basicAuth }, this.register);
+    await fastify.post('/user/many', { schema: schema.insertMany, onRequest: fastify.bearerToken }, this.insertMany);
     await fastify.post('/user/verify/send', { schema: schema.sendVerify, onRequest: fastify.basicAuth }, this.sendVerify);
     await fastify.post('/user/verify', { schema: schema.verify, onRequest: fastify.basicAuth }, this.verify);
     await fastify.post('/user/logout', { schema: schema.logout, onRequest: fastify.bearerToken }, this.logout);
@@ -35,6 +36,14 @@ module.exports = class {
   register = async (request, reply) => {
     const { body:payload } = request
     const response = await this.usecase.register(payload)
+  
+    reply.send(response)
+  }
+
+  insertMany = async (request, reply) => {
+    const opts = await request.user
+    const { body:payload } = request
+    const response = await this.usecase.insertMany(payload, opts)
   
     reply.send(response)
   }

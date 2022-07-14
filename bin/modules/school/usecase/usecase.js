@@ -1,5 +1,4 @@
 const { send } = require("../../../helpers/utils/wrapper");
-const { v4: uuid } = require('uuid');
 const httpError = require("http-errors");
 const validate = require("validate.js");
 
@@ -28,8 +27,7 @@ module.exports = class {
       }
     }
 
-    const now = new Date(Date.now()).toISOString()
-    const status = JSON.parse(await this.fastify.redis.get('schoolSubscriptionStatus'))
+    const status = JSON.parse(await this.fastify.redis.get('schoolStatuses'))
     const subscription = JSON.stringify({
       end: '',
       status: status.pending,
@@ -38,18 +36,12 @@ module.exports = class {
     const insertData = {
       ...payload,
       subscription,
-      id: uuid(),
       userId: opts.id,
-      name: opts.name,
-      email: opts.email,
-      phoneNumber: opts.phoneNumber,
       zone: JSON.stringify(payload.zone),
       image: JSON.stringify(payload.image),
-      data: JSON.stringify({}),
-      createdAt: now,
+      document: JSON.stringify(payload.document),
       createdBy: opts.id,
-      updatedAt: now,
-      updatedBy: opts.id,
+      updatedBy: opts.id
     }
     result =  await this.school.insert(insertData)
 
@@ -65,7 +57,7 @@ module.exports = class {
       throw httpError.NotFound('Sekolah tidak ditemukan')
     }
 
-    const payloadKeys = Object.keys(payloadProperties).filter(elm => ['zone', 'image', 'subscription', 'data'].includes(elm))
+    const payloadKeys = Object.keys(payloadProperties).filter(elm => ['zone', 'image', 'subscription', 'document'].includes(elm))
     if (!validate.isEmpty(payloadKeys)) {
       payloadKeys.forEach(elm => {
         const data = {
@@ -76,11 +68,9 @@ module.exports = class {
       })
     }
 
-    const now = new Date(Date.now()).toISOString()
     const data = {
       ...payloadProperties,
-      updatedAt: now,
-      updatedBy: opts.id,
+      updatedBy: opts.id
     }
     await this.school.update({ id }, data)
 

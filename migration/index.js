@@ -14,10 +14,19 @@ client.connect(async err => {
   if (err) throw err;
   console.log("Connected!");
 
-  const files = fs.readdirSync('migration/table_sql/')
-  for (const file of files) {
-    const sql = fs.readFileSync(`migration/table_sql/${file}`, "utf8")
-    await client.query(sql)
+  try {
+    const folders = fs.readdirSync('migration/table/')
+    for (const folder of folders) {
+      const files = fs.readdirSync(`migration/table/${folder}`)
+      for (const file of files) {
+        console.log(`migration/table/${folder}/${file}`)
+        const sql = fs.readFileSync(`migration/table/${folder}/${file}`, "utf8")
+        await client.query(sql)
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    process.exit();
   }
 
   console.log("Done");

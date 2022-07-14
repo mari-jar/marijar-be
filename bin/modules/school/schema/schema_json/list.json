@@ -49,8 +49,13 @@
                   "status": { "type": "string" }
                 }
               },
+              "document": { "type": "object", 
+                "properties": {
+                  "integrity": { "type": "string" }
+                }, 
+                "required": ["integrity"] },
               "name": { "type": "string" },
-              "data": { "type": "object" },
+              "description": { "type": "string" },
               "userId": { "type": "string", "format": "uuid" },
               "postalCode": { "type": "integer" },
               "phoneNumber": { "type": "string" },

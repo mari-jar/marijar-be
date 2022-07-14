@@ -40,7 +40,13 @@
                 "status": { "type": "string" }
               }
             },
+            "document": { "type": "object", 
+              "properties": {
+                "integrity": { "type": "string" }
+              }, 
+              "required": ["integrity"] },
             "name": { "type": "string" },
+            "description": { "type": "string" },
             "data": { "type": "object" },
             "userId": { "type": "string", "format": "uuid" },
             "postalCode": { "type": "integer" },

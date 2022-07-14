@@ -1,0 +1,25 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "status": { "type": "string" },
+      "role": { "type": "string" },
+      "name": { "type": "string" },
+      "email": { "type": "string" },
+      "phoneNumber": { "type": "integer" },
+      "password": { "type": "string" },
+      "createdBy": { "type": "string" },
+      "updatedBy": { "type": "string" }
+    },
+    "required": [
+      "status",
+      "role",
+      "name",
+      "email",
+      "phoneNumber",
+      "password"
+    ],
+    "additionalProperties": false
+  }
+}

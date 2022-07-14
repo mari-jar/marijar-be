@@ -2,6 +2,10 @@
   "body": {
     "type": "object",
     "properties": {
+      "name": { "type": "string" },
+      "email": { "type": "string", "format": "email" },
+      "description": { "type": "string" },
+      "phoneNumber": { "type": "integer", "minLength": 9, "maxLength": 14 },
       "address": { "type": "string" },
       "zone": { "type": "object", 
         "properties": {
@@ -33,15 +37,27 @@
         },
         "required": ["logo"] 
       },
-      "npsn": { "type": "integer", "minLength": 8 }
+      "npsn": { "type": "integer", "minLength": 8 },
+      "schoolLevel": { "type": "string" },
+      "document": { "type": "object", 
+        "properties": {
+          "integrity": { "type": "string" }
+        }, 
+        "required": ["integrity"] }
     },
     "required": [
+      "name",
+      "email",
+      "description",
+      "phoneNumber",
       "address", 
       "zone", 
       "postalCode", 
       "website", 
       "image", 
-      "npsn"],
+      "npsn",
+      "schoolLevel",
+      "document"],
     "additionalProperties": false
   },
   "response": {

@@ -1,0 +1,36 @@
+{
+  "body": {
+    "type": "array",
+    "items": { 
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "password": { "type": "string", "minLength": 8 },
+        "phoneNumber": { "type": "integer", "minLength": 9, "maxLength": 14 },
+        "role": { "type": "string" }
+      },
+      "required": ["name", "email", "password", "phoneNumber", "role"],
+      "additionalProperties": false
+    }
+  },
+  "response": {
+    "200": {
+      "type": "object",
+      "properties": {
+        "data": { 
+          "type": "array",
+          "items": { 
+            "type": "object", 
+            "properties": {
+              "id": { "type": "string", "format": "uuid" },
+              "email": { "type": "string" }
+            },
+            "required": ["id", "email"]
+          }
+        }
+      },
+      "required": ["data"]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 
 const Common = require("../../repositories/common/pg");
-const { camelCase } = require("change-case");
+const { camelCase, snakeCase } = require("change-case");
 
 // ================================
 // #Commons Service
@@ -11,26 +11,30 @@ const { camelCase } = require("change-case");
  * @userStatus
  * @schoolSubscriptionStatus
  */
+const listCommons = [
+  'userRoles',
+  'userStatuses',
+  'schoolStatuses',
+  'schoolLevels'
+];
+
 module.exports = {
   init: async (fastify) => {
     fastify.register(async (fastify, _, done) => {
       try {
-        const common = new Common(fastify)
-    
-        const types = await common.findManyGroup(['type'], {}, 'type')
-        
-        for (const [_, elm] of types.entries()) {
-          const { type } = elm
-          await fastify.redis.del(type)
-          let data = await common.findMany(['data'], { type })
+        for (const table of listCommons) {
+          const common = new Common(fastify, snakeCase(table))
+          
+          await fastify.redis.del(table)
+          let data = await common.findMany([], {})
           const reduce = data.reduce((obj, v) => {
-            const { data } = v
-            obj[camelCase(data.name)] = data.disguise || data.name
+            obj[camelCase(v.name)] = v.disguise || v.name
             
             return obj
           }, {})
           
-          await fastify.redis.set(type, JSON.stringify(reduce))
+          await fastify.redis.set(table, JSON.stringify(reduce))
+          
         }
       }
       catch (error) {
@@ -39,4 +43,5 @@ module.exports = {
       done()
     })
   }
+
 }
